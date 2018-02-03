@@ -6,7 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class DatabaseTest extends TestCase {
     function testCanCreateDatabase() {
-        $db = new Database();
+        # assume a db exists called taskapp where app@localhost has all permissions
+        $db = new Database("localhost", "taskapp", "app", "foobar");
     }
 
     function testCanAddNewTask() {
