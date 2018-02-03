@@ -69,7 +69,7 @@ final class Database {
         }
     }
 
-    public function update() {
+    public function update(string $id, string $title, string $content) {
     }
 
     public function delete() {
