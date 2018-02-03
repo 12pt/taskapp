@@ -40,7 +40,7 @@ function editTask(id, titleInput, contentInput) {
 /**
  * Called when the Add button is pressed.
  */
-function addTask() {
+function addTask(event) {
     var form = document.querySelector("#input");
     var iTitle = form.querySelector("#titleInput");
     var iContent = form.querySelector("#contentInput");
@@ -62,8 +62,13 @@ function addTask() {
 function showEditDialog(id) {
     // convert the task submission form to edit form
     var form = document.querySelector("#input");
-    var saveButton = form.querySelector("input[type=button]");
-    saveButton.setAttribute("value", "Save");
+    var saveButton = form.querySelector("#magicButton");
+    form.removeChild(saveButton);
+
+    var edit = document.createElement("input");
+    edit.type = "button";
+    edit.setAttribute("value", "Save");
+    form.appendChild(edit);
 
     var task = findTask(TASKS, id);
     var iTitle = form.querySelector("#titleInput");
@@ -73,10 +78,11 @@ function showEditDialog(id) {
     iContent.value = task["content"];
     iContent.placeholder = "Edit your task description here";
 
-    saveButton.onclick = function(event) {
+    edit.addEventListener("click", function() {
         editTask(id, iTitle, iContent);
-        // convert save button back to add button
-    };
+        form.removeChild(edit);
+        form.appendChild(saveButton);
+    });
 }
 
 function makeTaskElement(task) {
@@ -140,7 +146,5 @@ document.addEventListener("DOMContentLoaded", () => {
     nojs.style.visibility = "hidden";
 
     loadTasks();
-    document.querySelector("#magicButton").addEventListener("click", function(event) {
-        addTask();
-    });
+    document.querySelector("#magicButton").addEventListener("click", addTask);
 }, false);
