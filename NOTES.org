@@ -13,26 +13,25 @@ And be HTML/JS, PHP, MySQL. Spec says "help someone manage _their_ tasks", so no
 
 * REST API Outline
 
-|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
-|          | Create            | Read                                      | Update              | Delete                |
-|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
-| Resource | POST              | GET                                       | PUT/PATCH           | DELETE                |
-|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
-| .com/    | submit a new task | list all tasks                            | error               | error                 |
-| .com/1   | error             | list(/highlight?) a single task with id 1 | edit task with id 1 | delete task with id 1 |
-|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
+|----------+-------------------+----------------+---------------------+-----------------------|
+|          | Create            | Read           | Update              | Delete                |
+|----------+-------------------+----------------+---------------------+-----------------------|
+| Resource | POST              | GET            | PUT/PATCH           | DELETE                |
+|----------+-------------------+----------------+---------------------+-----------------------|
+| .com/    | submit a new task | list all tasks | error               | error                 |
+| .com/1   | error             | error          | edit task with id 1 | delete task with id 1 |
+|----------+-------------------+----------------+---------------------+-----------------------|
 
 * Database Outline
-1 table for notes. Fields =id= and =date_created= will be automatically created when inserting values (title, content). Assume no point making a new task completed already.
+1 table for notes. Field =id= will be automatically created when inserting values (title, content).
 
 ** Notes Table Fields
 Making an arbitrary decision that tasks won't have titles exceeding 64 characters.
 #+BEGIN_SRC sql
-create table note(
+CREATE TABLE IF NOT EXISTS tasks (
        id           INTEGER       NOT NULL AUTO_INCREMENT,
        title        VARCHAR(64)   NOT NULL DEFAULT 'No Title',
        content      VARCHAR(255)  NOT NULL,
-       completed    BOOLEAN       NOT NULL DEFAULT FALSE,
        date_created TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
        PRIMARY KEY(id));
 #+END_SRC

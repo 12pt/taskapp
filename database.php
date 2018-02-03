@@ -40,7 +40,6 @@ final class Database {
             id           INTEGER       NOT NULL AUTO_INCREMENT,
             title        VARCHAR(64)   NOT NULL DEFAULT 'No Title',
             content      VARCHAR(255)  NOT NULL,
-            completed    BOOLEAN       NOT NULL DEFAULT FALSE,
             date_created TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY(id));";
         $this->pdo->exec($sql);
