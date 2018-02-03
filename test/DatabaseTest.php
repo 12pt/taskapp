@@ -69,12 +69,18 @@ class DatabaseTest extends TestCase {
 
     function testCanDeleteATask() {
         $id = (string) $this->_selectRandomListing()["id"];
-        $result = $this->db->delete($id);
+        #echo "deleting row $id";
 
+        $result = $this->db->delete($id); # will return the id of the deleted row.
         $this->assertNotNull($result);
+        $this->assertEquals(json_decode($result, true)["id"], $id);
+
+        $deletionCheck = $this->db->hasTask($id);
+        print_r($deletionCheck);
+
         $this->assertEquals(
-            $this->db->hasTask($id),
-            false
+            json_decode($deletionCheck, true)["count"],
+            0
         );
     }
 }

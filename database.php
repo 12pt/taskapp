@@ -92,4 +92,21 @@ final class Database {
             return $this->_errorJson("unable to delete $id.");
         }
     }
+
+    public function hasTask(string $id) {
+        try {
+            $stmnt = $this->pdo->prepare("SELECT COUNT(*) FROM tasks WHERE id=:id");
+            $stmnt->bindParam(":id", $id);
+            $stmnt->execute();
+            $result = $stmnt->fetch(PDO::FETCH_ASSOC);
+            $count = $result["COUNT(*)"];
+
+            return json_encode(array(
+                "id" => $id,
+                "count" => $count));
+
+        } catch(PDOException $e) {
+            return $this->_errorJson("unable to check if a task exists with id $id.");
+        }
+    }
 }
