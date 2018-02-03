@@ -8,8 +8,8 @@ class DatabaseTest extends TestCase {
     private $db;
     
     function setUp() {
-        # assume a db exists called taskapp where app@localhost has all permissions
-        $this->db = new Database("localhost", "taskapp", "app", "foobar");
+        # assume a db exists called taskapp_test where app@localhost has all permissions
+        $this->db = new Database("localhost", "taskapp_test", "app", "foobar");
     }
 
     function testCanAddNewTask() {
@@ -18,6 +18,7 @@ class DatabaseTest extends TestCase {
         
         $result = $this->db->add($title, $content);
 
+        $this->assertNotNull($result);
         $this->assertJsonStringEqualsJsonString(
             json_encode(array("title" => $title, "content" => $content)),
             $result
@@ -26,6 +27,7 @@ class DatabaseTest extends TestCase {
 
     function testCanGetAllTasks() {
         $result = $this->db->getAll();
+        $this->assertNotNull($result);
     }
 
     function testCanUpdateATask() {
@@ -34,6 +36,8 @@ class DatabaseTest extends TestCase {
         $id = 1;
 
         $result = $this->db->update($id, $newTitle, $newContent);
+        $this->assertNotNull($result);
+
         $result_decoded = json_decode($result, true);
         # expecting $result to have the old id but with new contents
 
@@ -49,6 +53,7 @@ class DatabaseTest extends TestCase {
         $id = 1;
         $result = $this->db->delete($id);
 
+        $this->assertNotNull($result);
         $this->assertEqual(
             $db->hasTask($id),
             false
