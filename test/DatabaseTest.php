@@ -95,7 +95,6 @@ class DatabaseTest extends TestCase {
         $this->assertEquals(json_decode($result, true)["id"], $id);
 
         $deletionCheck = $this->db->hasTask($id);
-        print_r($deletionCheck);
 
         $this->assertEquals(
             json_decode($deletionCheck, true)["count"],
