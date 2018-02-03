@@ -87,6 +87,7 @@ function showEditDialog(id) {
 
 function makeTaskElement(task) {
     var container = document.createElement("div");
+    container.className = "task";
     var title = document.createElement("h2");
     var content = document.createElement("p");
     var creationTime = document.createElement("p");
@@ -118,7 +119,7 @@ function makeTaskElement(task) {
     container.appendChild(delButton);
     container.appendChild(editButton);
 
-    title.innerText = task["id"] + " | " + task["title"];
+    title.innerText = task["title"];
     content.innerText = task["content"];
     creationTime.innerText = task["date_created"];
 
