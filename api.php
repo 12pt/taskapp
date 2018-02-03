@@ -74,7 +74,7 @@ function respond(string $method, string $label) {
 }
 
 /**
- * Routing function, ensure we're in the right place, handle most 404s.
+ * Routing function, ensure we're in the right place, handle most 404s. This is the main entrypoint to the REST API.
  */
 function route(string $path, string $method) {
     $paths = explode("/", $path);
@@ -88,6 +88,7 @@ function route(string $path, string $method) {
     }
 }
 
+# Checking this makes it easy to run tests in test/APITest.php
 if(array_key_exists("REQUEST_URI", $_SERVER)) {
     echo route($_SERVER["REQUEST_URI"], $_SERVER["REQUEST_METHOD"]);
 }
