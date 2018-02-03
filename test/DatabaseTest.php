@@ -16,12 +16,16 @@ class DatabaseTest extends TestCase {
         $title = "my task title";
         $content = "my task content";
         
-        $result = $this->db->add($title, $content);
+        $result = json_decode($this->db->add($title, $content), true);
 
         $this->assertNotNull($result);
-        $this->assertJsonStringEqualsJsonString(
-            json_encode(array("title" => $title, "content" => $content)),
-            $result
+        $this->assertEquals(
+            $title,
+            $result["title"]
+        );
+        $this->assertEquals(
+            $content,
+            $result["content"]
         );
     }
 

@@ -34,8 +34,9 @@ final class Database {
             $stmnt = $this->pdo->prepare("SELECT * FROM tasks WHERE id=:id");
             $stmnt->bindParam(":id", $id);
             $stmnt->execute();
-            $result = $stmnt->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stmnt->fetch(PDO::FETCH_ASSOC);
             return json_encode($result);
+
         } catch(PDOException $e) {
             return json_encode(array("error" => "unable to find row with id $id"));
         }
@@ -47,8 +48,6 @@ final class Database {
             $stmnt->bindParam(":title", $title);
             $stmnt->bindParam(":content", $content);
             $stmnt->execute();
-            #return json_encode(array("id" => $this->pdo->lastInsertId()));
-
             return $this->_get($this->pdo->lastInsertId());
 
         } catch(PDOException $e) {
