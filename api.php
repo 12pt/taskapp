@@ -22,9 +22,7 @@ function get($label) {
 function post() {
     global $db;
     if(isset($_POST["title"]) && isset($_POST["content"])) {
-        $title = $_POST["title"];
-        $content = $_POST["content"];
-        return $db->add($title, $content);
+        return $db->add($_POST["title"], $_POST["content"]);
     } else {
         header("HTTP/1.1 400 Bad Request");
     }
@@ -39,10 +37,15 @@ function put($label) {
         global $db;
         parse_str(file_get_contents("php://input"), $put);
         
-        $id = $label;
+        $id = $label; # sake of clarity
         $title = $put["title"];
         $content = $put["content"];
-        return $db->update($id, $title, $content);
+
+        if(isset($title) && isset($content)) {
+            return $db->update($id, $title, $content);
+        } else {
+            header("HTTP/1.1 400 Bad Request");
+        }
     }
 }
 
@@ -61,7 +64,7 @@ function delete(string $label) { # label is the id e.g. ../api.php/23
 function respond(string $method, string $label) {
     switch($method) {
     case "GET": return get($label);
-    case "POST": return post($label);
+    case "POST": return post();
     case "PUT": return put($label);
     case "DELETE": return delete($label);
     default:
