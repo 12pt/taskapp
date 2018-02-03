@@ -63,8 +63,8 @@ class DatabaseTest extends TestCase {
         $id = (string) $randomChoice["id"];
 
         # TODO: make this randomly generated in case we update a previously updated task.
-        $newTitle = "my updated title";
-        $newContent = "my new content";
+        $newTitle = "my updated title [" . (string) rand() . "]";
+        $newContent = "my new content [" . (string) rand() . "]";
 
         $result = $this->db->update($id, $newTitle, $newContent);
         $this->assertNotNull($result);
