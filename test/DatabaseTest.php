@@ -7,16 +7,28 @@ use PHPUnit\Framework\TestCase;
 class DatabaseTest extends TestCase {
     private $db;
     
+    /**
+     * Ensure we can instantiate the Database class and that a database connection
+     * was successfully established.
+     */
     function setUp() {
         # assume a db exists called taskapp_test where app@localhost has all permissions
         $this->db = new Database("localhost", "taskapp_test", "app", "foobar");
     }
 
+    /**
+     * Gets all listings from the database and selects one at random.
+     *
+     * @return JSON object containing a random task.
+     */
     private function _selectRandomListing() {
         $listings = json_decode($this->db->getAll(), true);
         return $listings[array_rand($listings)];
     }
 
+    /**
+     * Check whether we can add a new task to the database.
+     */
     function testCanAddNewTask() {
         $title = "my task title";
         $content = "my task content";
@@ -34,19 +46,23 @@ class DatabaseTest extends TestCase {
         );
     }
 
+    /**
+     * Check if we can get all tasks in the database.
+     */
     function testCanGetAllTasks() {
         $result = $this->db->getAll();
         $this->assertNotNull($result);
     }
 
+    /**
+     * Check we can update a task. Selects a random task, and then requests an update of it.
+     * Checks that the updated data is the same as the test update data.
+     */
     function testCanUpdateATask() {
         $randomChoice = $this->_selectRandomListing();
         $id = (string) $randomChoice["id"];
 
-        # save a copy of its old data so we can compare it to the new data
-        $oldTitle = $randomChoice["title"];
-        $oldContent = $randomChoice["content"];
-
+        # TODO: make this randomly generated in case we update a previously updated task.
         $newTitle = "my updated title";
         $newContent = "my new content";
 
@@ -67,6 +83,9 @@ class DatabaseTest extends TestCase {
         );
     }
 
+    /**
+     * Check we can delete a task. Checks we have deleted it by looking for a task by its id again.
+     */
     function testCanDeleteATask() {
         $id = (string) $this->_selectRandomListing()["id"];
         #echo "deleting row $id";
