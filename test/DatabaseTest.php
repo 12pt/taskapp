@@ -12,6 +12,11 @@ class DatabaseTest extends TestCase {
         $this->db = new Database("localhost", "taskapp_test", "app", "foobar");
     }
 
+    private function _selectRandomListing() {
+        $listings = json_decode($this->db->getAll(), true);
+        return $listings[array_rand($listings)];
+    }
+
     function testCanAddNewTask() {
         $title = "my task title";
         $content = "my task content";
@@ -35,10 +40,7 @@ class DatabaseTest extends TestCase {
     }
 
     function testCanUpdateATask() {
-        # randomly select an existing task to update
-        $listings = json_decode($this->db->getAll(), true);
-        $randomChoice = $listings[array_rand($listings)];
-
+        $randomChoice = $this->_selectRandomListing();
         $id = (string) $randomChoice["id"];
 
         # save a copy of its old data so we can compare it to the new data
@@ -66,12 +68,12 @@ class DatabaseTest extends TestCase {
     }
 
     function testCanDeleteATask() {
-        $id = 1;
+        $id = (string) $this->_selectRandomListing()["id"];
         $result = $this->db->delete($id);
 
         $this->assertNotNull($result);
-        $this->assertEqual(
-            $db->hasTask($id),
+        $this->assertEquals(
+            $this->db->hasTask($id),
             false
         );
     }

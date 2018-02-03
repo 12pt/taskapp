@@ -82,6 +82,14 @@ final class Database {
         }
     }
 
-    public function delete() {
+    public function delete(string $id) {
+        try {
+            $stmnt = $this->pdo->prepare("DELETE FROM tasks WHERE id=:id");
+            $stmnt->bindParam(":id", $id);
+            $stmnt->execute();
+            return json_encode(array("id" => $id));
+        } catch(PDOException $e) {
+            return $this->_errorJson("unable to delete $id.");
+        }
     }
 }
