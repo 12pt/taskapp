@@ -29,6 +29,10 @@ final class Database {
         $this->pdo->exec($sql);
     }
 
+    private function _errorJson(string $message) {
+        return json_encode(array("error" => $message));
+    }
+
     private function _get(string $id) {
         try {
             $stmnt = $this->pdo->prepare("SELECT * FROM tasks WHERE id=:id");
@@ -38,7 +42,7 @@ final class Database {
             return json_encode($result);
 
         } catch(PDOException $e) {
-            return json_encode(array("error" => "unable to find row with id $id"));
+            return $this->_errorJson("unable to find row with id $id");
         }
     }
 
@@ -51,11 +55,18 @@ final class Database {
             return $this->_get($this->pdo->lastInsertId());
 
         } catch(PDOException $e) {
-            return json_encode(array("error" => "unable to add row with keys $title and $content"));
+            return $this->_errorJson("unable to add row with keys $title and $content");
         }
     }
 
     public function getAll() {
+        try {
+            $stmnt = $this->pdo->prepare("SELECT * FROM tasks");
+            $stmnt->execute();
+            return json_encode($stmnt->fetchAll(PDO::FETCH_ASSOC));
+        } catch(PDOException $e) {
+            return $this->errorJson("unable to get all tasks.");
+        }
     }
 
     public function update() {
