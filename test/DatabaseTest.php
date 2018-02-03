@@ -37,12 +37,13 @@ class DatabaseTest extends TestCase {
     function testCanUpdateATask() {
         # randomly select an existing task to update
         $listings = json_decode($this->db->getAll(), true);
-        $randomChoice = array_rand($listings);
+        $randomChoice = $listings[array_rand($listings)];
 
-        $id = $randomChoice["id"];
+        $id = (string) $randomChoice["id"];
 
-        $oldTitle = $randomChoice["title"]
-        $oldContent = $randomChoice["content"]
+        # save a copy of its old data so we can compare it to the new data
+        $oldTitle = $randomChoice["title"];
+        $oldContent = $randomChoice["content"];
 
         $newTitle = "my updated title";
         $newContent = "my new content";
@@ -53,11 +54,14 @@ class DatabaseTest extends TestCase {
         $result_decoded = json_decode($result, true);
         # expecting $result to have the old id but with new contents
 
-        $this->assertEquals($result_decoded->{"id"}, $id);
+        $this->assertEquals($result_decoded["id"], $id);
         
+        # check the updated task contains what we wanted
         $this->assertJsonStringEqualsJsonString(
-            json_encode(array("title" => $newTitle, "content" => $newContent)),
-            json_encode(array("title" => $oldTitle, "content" => $oldContent))
+            json_encode(array("title"   => $newTitle,
+                              "content" => $newContent)),
+            json_encode(array("title"   => $result_decoded["title"],
+                              "content" => $result_decoded["content"]))
         );
     }
 
