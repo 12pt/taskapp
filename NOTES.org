@@ -1,0 +1,76 @@
+#+TITLE: Project Overview / Notes
+#+OPTIONS: toc:nil;
+
+* Specification
+Must do the following:
+
++ create a task
++ delete a task
++ list all tasks
++ edit a task
+  
+And be HTML/JS, PHP, MySQL. Spec says "help someone manage _their_ tasks", so no user accounts necessary; assume running on localhost.
+
+* REST API Outline
+
+|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
+|          | Create            | Read                                      | Update              | Delete                |
+|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
+| Resource | POST              | GET                                       | PUT/PATCH           | DELETE                |
+|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
+| .com/    | submit a new task | list all tasks                            | error               | error                 |
+| .com/1   | error             | list(/highlight?) a single task with id 1 | edit task with id 1 | delete task with id 1 |
+|----------+-------------------+-------------------------------------------+---------------------+-----------------------|
+
+* Database Outline
+1 table for notes. Fields =id= and =date_created= will be automatically created when inserting values (title, content). Assume no point making a new task completed already.
+
+** Notes Table Fields
+Making an arbitrary decision that tasks won't have titles exceeding 64 characters.
+#+BEGIN_SRC sql
+create table note(
+       id           INTEGER       NOT NULL AUTO_INCREMENT,
+       title        VARCHAR(64)   NOT NULL DEFAULT 'No Title',
+       content      VARCHAR(255)  NOT NULL,
+       completed    BOOLEAN       NOT NULL DEFAULT FALSE,
+       date_created TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+       PRIMARY KEY(id));
+#+END_SRC
+
+** Create a task
+The bare minimum needed to create a new task:
+#+BEGIN_SRC sql
+INSERT INTO note (content) VALUES ('my task to do');
+#+END_SRC
+
+A nice, fully flushed task.
+#+BEGIN_SRC sql
+INSERT INTO note (title, content) VALUES ('my title', 'my task to do');
+#+END_SRC
+
+** List all tasks
+Boring, but we need 100% of the information we store in the notes table.
+#+BEGIN_SRC sql
+SELECT * FROM note;
+#+END_SRC
+
+Listing all tasks that aren't completed:
+#+BEGIN_SRC sql
+SELECT * FROM note WHERE completed=FALSE;
+#+END_SRC
+
+Listing all completed tasks:
+#+BEGIN_SRC sql
+SELECT * FROM note WHERE completed=TRUE; 
+#+END_SRC
+
+** Delete a task (with id 1)
+#+BEGIN_SRC sql
+DELETE FROM note WHERE id=1;
+#+END_SRC
+
+** Edit a task (with id 1)
+Update both title and content at the same time because we don't need to worry about speed quite so much.
+#+BEGIN_SRC sql
+UPDATE note SET title='updated title', content='updated content' WHERE id=1;
+#+END_SRC
