@@ -24,7 +24,11 @@ final class Database {
 
             $this->_checkDatabaseHasTables();
         } catch(PDOException $e) {
-            print("An error occured when initializing the database: " . $e->getMessage());
+            #json_encode(array("error" => "An error occured when initializing the database: " . $e->getMessage()));
+            # silently fail here, check at API entrypoints instead so we don't randomly tell someone
+            # this if they don't actually care.
+
+            # may want to write to a logfile here instead.
         }
     }
 
@@ -100,12 +104,16 @@ final class Database {
      * @return JSON object which is an array of all tasks.
      */
     public function getAll() {
-        try {
-            $stmnt = $this->pdo->prepare("SELECT * FROM tasks");
-            $stmnt->execute();
-            return json_encode($stmnt->fetchAll(PDO::FETCH_ASSOC));
-        } catch(PDOException $e) {
-            return $this->_errorJson("unable to get all tasks.");
+        if(isset($this->pdo)) {
+            try {
+                $stmnt = $this->pdo->prepare("SELECT * FROM tasks");
+                $stmnt->execute();
+                return json_encode($stmnt->fetchAll(PDO::FETCH_ASSOC));
+            } catch(PDOException $e) {
+                return $this->_errorJson("unable to get all tasks.");
+            }
+        } else {
+            return json_encode(array("error" => "unable to connect to the database."));
         }
     }
 

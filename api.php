@@ -12,7 +12,11 @@ $db = new Database("localhost", "taskapp_test", "app", "foobar");
  */
 function get($label) {
     global $db;
-    return $db->getAll();
+    if(isset($db)) {
+        return $db->getAll();
+    } else {
+        return json_encode(array("error" => "unable to connect to the database."));
+    }
 }
 
 /**

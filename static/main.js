@@ -53,7 +53,6 @@ function addTask(event) {
             iContent.value = "";
 
             var insertArea = document.querySelector("#tasklist");
-            console.log(response);
             insertArea.appendChild(makeTaskElement(JSON.parse(response)));
         }
     }, false);
@@ -126,14 +125,38 @@ function makeTaskElement(task) {
     return container;
 }
 
+function deleteChildren(node) {
+    while(node.firstChild) {
+        node.removeChild(node.firstChild);
+    }
+}
+
 function loadTasks() {
     ajax.get("http://localhost:8000/api.php/", {}, function(data) {
+        var warning = document.querySelector("#warning");
+        data = JSON.parse(data);
+
         if(!data.error) {
+            warning.style.visibility = "hidden";
+            warning.style.display = "none";
+
             insertArea = document.querySelector("#tasklist");
-            TASKS = JSON.parse(data);
-            for(var task of TASKS) {
-                var container = makeTaskElement(task);
-                insertArea.appendChild(container);
+            deleteChildren(insertArea);
+            TASKS = data;
+            if(TASKS.length > 0) {
+                for(var task of TASKS) {
+                    var container = makeTaskElement(task);
+                    insertArea.appendChild(container);
+                }
+            } else {
+                warning.querySelector("p").innerText = "No tasks! Make some?";
+            }
+        } else {
+            // turn on the warning div
+            if(warning) {
+                warning.querySelector("p").innerText = "An error occured when trying to load your tasks. Are you connected to the database?";
+                warning.style.visibility = "show";
+                warning.style.display = "block";
             }
         }
     }, false);
