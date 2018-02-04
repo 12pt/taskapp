@@ -6,8 +6,8 @@ var TASKS;
 
 /**
 * Search an array of task objects for a certain ID.
-* @param Object tasks the tasks object.
-* @param id string the unique task ID.
+* @param {Object} tasks the tasks object.
+* @param {id} string the unique task ID.
 */
 function findTask(tasks, id) {
     if(id > 0 && tasks.length > 0) {
@@ -22,8 +22,8 @@ function findTask(tasks, id) {
 
 /**
  * Delete a single node by its ID. Or at least, request we do.
- * @param string id the id of the task.
- * @param Event the event that triggered this (clicking on THIS task).
+ * @param {string} id the id of the task.
+ * @param {Event} the event that triggered this (clicking on THIS task).
  */
 function deleteTask(id, event) {
     ajax.del("http://localhost:8000/api.php/" + id, {}, function(response) {
@@ -38,9 +38,9 @@ function deleteTask(id, event) {
 
 /**
  * Edit a single task by its id.
- * @param string id the id of the task
- * @param Node input the input field holding the title
- * @param Node input the input field holding the content
+ * @param {string} id the id of the task
+ * @param {Node} input the input field holding the title
+ * @param {Node} input the input field holding the content
  */
 function editTask(id, titleInput, contentInput) {
     ajax.put("http://localhost:8000/api.php/" + id,
@@ -60,7 +60,7 @@ function editTask(id, titleInput, contentInput) {
 /**
  * Called when the Add button is pressed, adds a task with the given information in the input
  * fields of the form.
- * @param Event event the event that triggered the addition of the task (click event).
+ * @param {Event} event the event that triggered the addition of the task (click event).
  */
 function addTask(event) {
     var form = document.querySelector("#input");
@@ -82,6 +82,7 @@ function addTask(event) {
 
 /**
  * Convert the task-add-form to a task-edit-form.
+ * @param {string} id the id of the task.
  */
 function showEditDialog(id) {
     // convert the task submission form to edit form
@@ -111,6 +112,7 @@ function showEditDialog(id) {
 
 /**
  * Wrap all the information for a single task JSON object in HTML.
+ * @param {Object} task an object containing the task.
  */
 function makeTaskElement(task) {
     var container = document.createElement("div");
@@ -156,6 +158,7 @@ function makeTaskElement(task) {
 /**
  * Utility function to remove all children of a node, used to clear the tasklist
  * between refreshes. (refreshing not yet implemented).
+ * @param {Node} node the node whose children should be deleted.
  */
 function deleteChildren(node) {
     while(node.firstChild) {
