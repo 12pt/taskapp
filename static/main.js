@@ -1,5 +1,14 @@
+"use strict";
+
+// global object to hold all the tasks. Used primarily for the edit dialog to allow
+// for easy editing of specific tasks.
 var TASKS; 
 
+/**
+* Search an array of task objects for a certain ID.
+* @param Object tasks the tasks object.
+* @param id string the unique task ID.
+*/
 function findTask(tasks, id) {
     if(id > 0 && tasks.length > 0) {
         for(var task of tasks) {
@@ -11,6 +20,11 @@ function findTask(tasks, id) {
     return null;
 }
 
+/**
+ * Delete a single node by its ID. Or at least, request we do.
+ * @param string id the id of the task.
+ * @param Event the event that triggered this (clicking on THIS task).
+ */
 function deleteTask(id, event) {
     ajax.del("http://localhost:8000/api.php/" + id, {}, function(response) {
         if(response.error) {
@@ -22,6 +36,12 @@ function deleteTask(id, event) {
     });
 }
 
+/**
+ * Edit a single task by its id.
+ * @param string id the id of the task
+ * @param Node input the input field holding the title
+ * @param Node input the input field holding the content
+ */
 function editTask(id, titleInput, contentInput) {
     ajax.put("http://localhost:8000/api.php/" + id,
              {"title": titleInput.value, "content": contentInput.value},
@@ -38,7 +58,9 @@ function editTask(id, titleInput, contentInput) {
 }
 
 /**
- * Called when the Add button is pressed.
+ * Called when the Add button is pressed, adds a task with the given information in the input
+ * fields of the form.
+ * @param Event event the event that triggered the addition of the task (click event).
  */
 function addTask(event) {
     var form = document.querySelector("#input");
@@ -58,6 +80,9 @@ function addTask(event) {
     }, false);
 }
 
+/**
+ * Convert the task-add-form to a task-edit-form.
+ */
 function showEditDialog(id) {
     // convert the task submission form to edit form
     var form = document.querySelector("#input");
@@ -84,6 +109,9 @@ function showEditDialog(id) {
     });
 }
 
+/**
+ * Wrap all the information for a single task JSON object in HTML.
+ */
 function makeTaskElement(task) {
     var container = document.createElement("div");
     container.className = "task";
@@ -125,12 +153,21 @@ function makeTaskElement(task) {
     return container;
 }
 
+/**
+ * Utility function to remove all children of a node, used to clear the tasklist
+ * between refreshes. (refreshing not yet implemented).
+ */
 function deleteChildren(node) {
     while(node.firstChild) {
         node.removeChild(node.firstChild);
     }
 }
 
+/**
+ * Called once on page load, written so it could be called periodically.
+ * Makes a GET request to the API to get all tasks, and then it formats them in HTML
+ * and gently places them in the #tasklist div.
+ */
 function loadTasks() {
     ajax.get("http://localhost:8000/api.php/", {}, function(data) {
         var warning = document.querySelector("#warning");
@@ -140,7 +177,7 @@ function loadTasks() {
             warning.style.visibility = "hidden";
             warning.style.display = "none";
 
-            insertArea = document.querySelector("#tasklist");
+            var insertArea = document.querySelector("#tasklist");
             deleteChildren(insertArea);
             TASKS = data;
             if(TASKS.length > 0) {
