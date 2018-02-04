@@ -202,8 +202,8 @@ function loadTasks() {
     }, false);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    let nojs = document.querySelector("#nojs");
+document.addEventListener("DOMContentLoaded", function() {
+    var nojs = document.querySelector("#nojs");
     if(nojs.style == null) {
         nojs.style = {};
     }
