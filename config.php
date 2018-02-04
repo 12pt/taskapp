@@ -8,6 +8,5 @@ return [
     "host" => "localhost",
     "dbname" => "taskapp_test",
     "username" => "app",
-    "password" => "CHANGEME"
+    "password" => "foobar"
 ];
-?>

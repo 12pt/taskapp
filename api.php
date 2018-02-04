@@ -5,7 +5,9 @@ define("API_RESOURCE", "api.php");
 require_once(__DIR__ . "/database.php");
 
 global $db;
-$db = new Database("localhost", "taskapp_test", "app", "foobar");
+
+$dbinfo = include(__DIR__ . '/config.php');
+$db = new Database($dbinfo["host"], $dbinfo["dbname"], $dbinfo["username"], $dbinfo["password"]);
 
 /**
  * Get all tasks.

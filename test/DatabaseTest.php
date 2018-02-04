@@ -13,7 +13,8 @@ class DatabaseTest extends TestCase {
      */
     function setUp() {
         # assume a db exists called taskapp_test where app@localhost has all permissions
-        $this->db = new Database("localhost", "taskapp_test", "app", "foobar");
+        $dbinfo = include(__DIR__ . '../config.php');
+        $this->db = new Database($dbinfo["host"], $dbinfo["dbname"], $dbinfo["username"], $dbinfo["password"]);
     }
 
     /**

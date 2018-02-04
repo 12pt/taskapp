@@ -6,7 +6,7 @@ Created in 1 day's worth of work spread over 2 days due to pre-existing family c
 Notes
 -----
 
-No frameworks other than phpunit were used; this was to demonstrate an understanding of the underlying languages rather than knowledge of frameworks, which in the case of JavaScript change yearly.
+No frameworks other than `phpunit` and `normalize.css` were used; this was to demonstrate an understanding of the underlying languages rather than knowledge of frameworks, which in the case of JavaScript change yearly.
 
 Of course, this increased development time by quite a bit if one would compare PHP's REST friendliness sans frameworks compared to, say, NodeJS's.
 
