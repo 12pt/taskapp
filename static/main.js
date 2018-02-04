@@ -5,10 +5,10 @@
 var TASKS; 
 
 /**
-* Search an array of task objects for a certain ID.
-* @param {Object} tasks the tasks object.
-* @param {id} string the unique task ID.
-*/
+ * Search an array of task objects for a certain ID.
+ * @param {Object} tasks the tasks object.
+ * @param {id} string the unique task ID.
+ */
 function findTask(tasks, id) {
     if(id > 0 && tasks.length > 0) {
         for(var task of tasks) {
@@ -28,7 +28,7 @@ function findTask(tasks, id) {
 function deleteTask(id, event) {
     ajax.del("http://localhost:8000/api.php/" + id, {}, function(response) {
         if(response.error) {
-            console.error("Couldn't delete the task with id " + id);
+            error("Couldn't delete the task with id " + id, true);
         } else {
             event.target.parentNode.parentNode.removeChild(event.target.parentNode);
             console.log("Removed task " + id);
@@ -69,7 +69,7 @@ function addTask(event) {
 
     ajax.post("http://localhost:8000/api.php/", {title: iTitle.value, content: iContent.value}, function(response) {
         if(response.error) {
-            console.warn("Error when trying to post a new task: " + response);
+            error("Error when trying to post a new task: " + response, true);
         } else {
             iTitle.value = "New Task";
             iContent.value = "";
@@ -173,12 +173,10 @@ function deleteChildren(node) {
  */
 function loadTasks() {
     ajax.get("http://localhost:8000/api.php/", {}, function(data) {
-        var warning = document.querySelector("#warning");
         data = JSON.parse(data);
 
         if(!data.error) {
-            warning.style.visibility = "hidden";
-            warning.style.display = "none";
+            hideError();
 
             var insertArea = document.querySelector("#tasklist");
             deleteChildren(insertArea);
@@ -189,14 +187,12 @@ function loadTasks() {
                     insertArea.appendChild(container);
                 }
             } else {
-                warning.querySelector("p").innerText = "No tasks! Make some?";
+                error("No tasks planned yet.");
             }
         } else {
             // turn on the warning div
             if(warning) {
-                warning.querySelector("p").innerText = "An error occured when trying to load your tasks. Are you connected to the database?";
-                warning.style.visibility = "show";
-                warning.style.display = "block";
+                error("An error occured when trying to load your tasks. Are you connected to the database?", false);
             }
         }
     }, false);
